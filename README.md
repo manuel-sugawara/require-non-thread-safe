@@ -1,22 +1,131 @@
 # require-issue
 
-A Clojure library designed to ... well, that part is up to you.
+Small example showing that `clojure.core/require` is not thread-safe. To reproduce simply follow the steps:
 
-## Usage
+```
+$ lein jar
+$ java -cp `lein classpath` require_issue.App
+```
 
-FIXME
+This will fail with something similar to (you might have to try several times):
 
-## License
-
-Copyright © 2020 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+```
+Exception in thread "Thread-1" java.lang.ExceptionInInitializerError
+	at require_issue.App$2.run(App.java:49)
+Caused by: Syntax error compiling at (cheshire/generate_seq.clj:1:1).
+	at clojure.lang.Compiler.load(Compiler.java:7647)
+	at clojure.lang.RT.loadResourceScript(RT.java:381)
+	at clojure.lang.RT.loadResourceScript(RT.java:372)
+	at clojure.lang.RT.load(RT.java:463)
+	at clojure.lang.RT.load(RT.java:428)
+	at clojure.core$load$fn__6824.invoke(core.clj:6126)
+	at clojure.core$load.invokeStatic(core.clj:6125)
+	at clojure.core$load.doInvoke(core.clj:6109)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at clojure.core$load_one.invokeStatic(core.clj:5908)
+	at clojure.core$load_one.invoke(core.clj:5903)
+	at clojure.core$load_lib$fn__6765.invoke(core.clj:5948)
+	at clojure.core$load_lib.invokeStatic(core.clj:5947)
+	at clojure.core$load_lib.doInvoke(core.clj:5928)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invokeStatic(core.clj:667)
+	at clojure.core$load_libs.invokeStatic(core.clj:5985)
+	at clojure.core$load_libs.doInvoke(core.clj:5969)
+	at clojure.lang.RestFn.applyTo(RestFn.java:137)
+	at clojure.core$apply.invokeStatic(core.clj:667)
+	at clojure.core$require.invokeStatic(core.clj:6007)
+	at clojure.core$require.doInvoke(core.clj:6007)
+	at clojure.lang.RestFn.invoke(RestFn.java:457)
+	at cheshire.core$eval256$loading__6706__auto____257.invoke(core.clj:1)
+	at cheshire.core$eval256.invokeStatic(core.clj:1)
+	at cheshire.core$eval256.invoke(core.clj:1)
+	at clojure.lang.Compiler.eval(Compiler.java:7176)
+	at clojure.lang.Compiler.eval(Compiler.java:7165)
+	at clojure.lang.Compiler.load(Compiler.java:7635)
+	at clojure.lang.RT.loadResourceScript(RT.java:381)
+	at clojure.lang.RT.loadResourceScript(RT.java:372)
+	at clojure.lang.RT.load(RT.java:463)
+	at clojure.lang.RT.load(RT.java:428)
+	at clojure.core$load$fn__6824.invoke(core.clj:6126)
+	at clojure.core$load.invokeStatic(core.clj:6125)
+	at clojure.core$load.doInvoke(core.clj:6109)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at clojure.core$load_one.invokeStatic(core.clj:5908)
+	at clojure.core$load_one.invoke(core.clj:5903)
+	at clojure.core$load_lib$fn__6765.invoke(core.clj:5948)
+	at clojure.core$load_lib.invokeStatic(core.clj:5947)
+	at clojure.core$load_lib.doInvoke(core.clj:5928)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invokeStatic(core.clj:667)
+	at clojure.core$load_libs.invokeStatic(core.clj:5985)
+	at clojure.core$load_libs.doInvoke(core.clj:5969)
+	at clojure.lang.RestFn.applyTo(RestFn.java:137)
+	at clojure.core$apply.invokeStatic(core.clj:667)
+	at clojure.core$require.invokeStatic(core.clj:6007)
+	at clojure.core$require.doInvoke(core.clj:6007)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at require_issue.core$eval235$loading__6706__auto____238.invoke(core.clj:1)
+	at require_issue.core$eval235.invokeStatic(core.clj:1)
+	at require_issue.core$eval235.invoke(core.clj:1)
+	at clojure.lang.Compiler.eval(Compiler.java:7176)
+	at clojure.lang.Compiler.eval(Compiler.java:7165)
+	at clojure.lang.Compiler.load(Compiler.java:7635)
+	at clojure.lang.RT.loadResourceScript(RT.java:381)
+	at clojure.lang.RT.loadResourceScript(RT.java:372)
+	at clojure.lang.RT.load(RT.java:463)
+	at clojure.lang.RT.load(RT.java:428)
+	at clojure.core$load$fn__6824.invoke(core.clj:6126)
+	at clojure.core$load.invokeStatic(core.clj:6125)
+	at clojure.core$load.doInvoke(core.clj:6109)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at clojure.core$load_one.invokeStatic(core.clj:5908)
+	at clojure.core$load_one.invoke(core.clj:5903)
+	at clojure.core$load_lib$fn__6765.invoke(core.clj:5948)
+	at clojure.core$load_lib.invokeStatic(core.clj:5947)
+	at clojure.core$load_lib.doInvoke(core.clj:5928)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invokeStatic(core.clj:667)
+	at clojure.core$load_libs.invokeStatic(core.clj:5985)
+	at clojure.core$load_libs.doInvoke(core.clj:5969)
+	at clojure.lang.RestFn.applyTo(RestFn.java:137)
+	at clojure.core$apply.invokeStatic(core.clj:667)
+	at clojure.core$require.invokeStatic(core.clj:6007)
+	at clojure.core$require.doInvoke(core.clj:6007)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at clojure.core$eval2.invokeStatic(NO_SOURCE_FILE:0)
+	at clojure.core$eval2.invoke(NO_SOURCE_FILE)
+	at clojure.lang.Compiler.eval(Compiler.java:7176)
+	at clojure.lang.Compiler.eval(Compiler.java:7131)
+	at require_issue.FromJava1.<clinit>(FromJava1.java:12)
+	... 1 more
+Caused by: java.lang.IllegalAccessError: i? does not exist
+	at clojure.core$refer.invokeStatic(core.clj:4249)
+	at clojure.core$refer.doInvoke(core.clj:4217)
+	at clojure.lang.RestFn.applyTo(RestFn.java:139)
+	at clojure.core$apply.invokeStatic(core.clj:667)
+	at clojure.core$load_lib.invokeStatic(core.clj:5966)
+	at clojure.core$load_lib.doInvoke(core.clj:5928)
+	at clojure.lang.RestFn.applyTo(RestFn.java:142)
+	at clojure.core$apply.invokeStatic(core.clj:667)
+	at clojure.core$load_libs.invokeStatic(core.clj:5985)
+	at clojure.core$load_libs.doInvoke(core.clj:5969)
+	at clojure.lang.RestFn.applyTo(RestFn.java:137)
+	at clojure.core$apply.invokeStatic(core.clj:669)
+	at clojure.core$use.invokeStatic(core.clj:6093)
+	at clojure.core$use.doInvoke(core.clj:6093)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at cheshire.generate_seq$eval275$loading__6706__auto____276.invoke(generate_seq.clj:1)
+	at cheshire.generate_seq$eval275.invokeStatic(generate_seq.clj:1)
+	at cheshire.generate_seq$eval275.invoke(generate_seq.clj:1)
+	at clojure.lang.Compiler.eval(Compiler.java:7176)
+	at clojure.lang.Compiler.eval(Compiler.java:7165)
+	at clojure.lang.Compiler.load(Compiler.java:7635)
+	... 84 more
+Exception in thread "Thread-0" java.lang.RuntimeException: java.lang.IllegalStateException: Attempting to call unbound fn: #'require-issue.core/json-read-string
+	at require_issue.App$1.run(App.java:39)
+Caused by: java.lang.IllegalStateException: Attempting to call unbound fn: #'require-issue.core/json-read-string
+	at clojure.lang.Var$Unbound.throwArity(Var.java:45)
+	at clojure.lang.AFn.invoke(AFn.java:32)
+	at require_issue.FromJava0.readJson(FromJava0.java:17)
+	at require_issue.App$1.run(App.java:37)
+```
